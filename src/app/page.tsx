@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const [selectedRegion, setSelectedRegion] = useState('');
@@ -209,6 +210,17 @@ export default function Home() {
                 </label>
               );
             })}
+          </div>
+
+          {/* Fallback button for Prolific users when slots are full */}
+          <div className="mt-8 flex flex-col items-center">
+            <p className="text-sm text-gray-500 mb-3">No slots available for your region?</p>
+            <Link
+              href="/completion"
+              className="w-full py-3 px-6 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 font-bold text-center hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all"
+            >
+              None of my region slots have been utilized
+            </Link>
           </div>
         </div>
 
