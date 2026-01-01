@@ -22,6 +22,9 @@ export default function Home() {
     try {
       const res = await fetch('/api/claim', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ region: selectedRegion }),
       });
 
@@ -41,7 +44,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4 font-sans">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4 font-sans text-black">
       <div className="max-w-2xl w-full bg-white p-8 rounded-xl shadow-sm border border-gray-200">
         
         {/* Header */}
@@ -117,3 +120,4 @@ export default function Home() {
     </div>
   );
 }
+
