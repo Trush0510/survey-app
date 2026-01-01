@@ -14,6 +14,20 @@ const MAX_LIMIT = 7;
 // Initialize Redis from the environment variables Vercel set for you
 const redis = Redis.fromEnv();
 
+export async function GET() {
+  try {
+    const counts: Record<string, number> = {};
+    for (const region of Object.keys(REGION_FORMS)) {
+      const count = await redis.get<number>(`quota:${region}`);
+      counts[region] = count || 0;
+    }
+    return NextResponse.json({ counts });
+  } catch (error) {
+    console.error('Redis GET Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const { region } = await request.json();
@@ -24,16 +38,23 @@ export async function POST(request: Request) {
 
     const key = `quota:${region}`;
 
-    // 1. Increment count
-    const currentCount = await redis.incr(key);
+    // 1. Check limit FIRST before incrementing
+    const currentCount = (await redis.get<number>(key)) || 0;
 
-    // 2. Check limit
-    if (currentCount > MAX_LIMIT) {
-      // Optional: Decrement it back so the number stays accurate at 7
-      await redis.decr(key);
-
+    if (currentCount >= MAX_LIMIT) {
       return NextResponse.json({
-        error: 'Sorry, the quota for this region (7 people) is full.'
+        error: `Sorry, the quota for this region (${MAX_LIMIT} people) is full.`
+      }, { status: 403 });
+    }
+
+    // 2. Increment count
+    const newCount = await redis.incr(key);
+
+    // 3. Double check (safety for race conditions)
+    if (newCount > MAX_LIMIT) {
+      await redis.decr(key);
+      return NextResponse.json({
+        error: `Sorry, the quota for this region (${MAX_LIMIT} people) is full.`
       }, { status: 403 });
     }
 
@@ -43,8 +64,9 @@ export async function POST(request: Request) {
     });
 
   } catch (error) {
-    console.error('Redis Error:', error);
+    console.error('Redis POST Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 
