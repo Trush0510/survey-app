@@ -226,7 +226,7 @@ export default function Home() {
               href="/completion"
               className="w-full py-3 px-6 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 font-bold text-center hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all"
             >
-              None of my region slots have been utilized
+              redirect me to completion page
             </Link>
           </div>
         </div>

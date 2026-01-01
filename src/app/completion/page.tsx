@@ -27,7 +27,7 @@ export default function Completion() {
 
                 <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 mb-8">
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Your Completion Code</p>
-                    <div className="flex items-center justify-center space-x-3">
+                    <div className="flex items-center justify-center space-x-3 mb-6">
                         <code className="text-3xl font-mono font-extrabold text-blue-600 tracking-wider">
                             {code}
                         </code>
@@ -47,6 +47,18 @@ export default function Completion() {
                             )}
                         </button>
                     </div>
+
+                    <a
+                        href="https://app.prolific.com/submissions/complete?cc=CL9MZ262"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-flex items-center justify-center py-3 px-6 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20"
+                    >
+                        take me to prolific
+                        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
                 </div>
 
                 <Link
