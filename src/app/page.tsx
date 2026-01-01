@@ -53,7 +53,11 @@ export default function Home() {
         setIsLoadingCounts(false);
       }
     }
+
     fetchCounts();
+    // Poll for updates every 30 seconds
+    const interval = setInterval(fetchCounts, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   async function handleSubmit() {
@@ -163,10 +167,10 @@ export default function Home() {
                 <label
                   key={r.id}
                   className={`relative flex flex-col md:flex-row md:items-center justify-between p-5 border-2 rounded-xl transition-all ${isFull
-                      ? 'bg-gray-50 border-gray-200 opacity-60 cursor-not-allowed'
-                      : isSelected
-                        ? 'border-blue-500 bg-blue-50/50 ring-2 ring-blue-500/20'
-                        : 'border-gray-200 hover:border-blue-200 cursor-pointer'
+                    ? 'bg-gray-50 border-gray-200 opacity-60 cursor-not-allowed'
+                    : isSelected
+                      ? 'border-blue-500 bg-blue-50/50 ring-2 ring-blue-500/20'
+                      : 'border-gray-200 hover:border-blue-200 cursor-pointer'
                     }`}
                 >
                   <div className="flex items-start mb-2 md:mb-0">
@@ -221,8 +225,8 @@ export default function Home() {
           onClick={handleSubmit}
           disabled={!selectedRegion || status === 'loading'}
           className={`w-full py-4 px-6 rounded-xl font-extrabold text-lg shadow-lg transform transition-all active:scale-[0.98] ${!selectedRegion || status === 'loading'
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
-              : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-blue-500/25'
+            ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
+            : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-blue-500/25'
             }`}
         >
           {status === 'loading' ? (
