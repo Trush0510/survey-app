@@ -151,6 +151,13 @@ export default function Home() {
           </ul>
         </div>
 
+        {/* Region Relevance Emphasis Box */}
+        <div className="bg-red-50 p-4 rounded-xl border border-red-200 mb-10 text-center animate-pulse">
+          <p className="font-black text-red-700 text-lg uppercase tracking-tight">
+            PICK THE OPTION THAT IS MOST RELEVANT TO YOUR REGION
+          </p>
+        </div>
+
         {/* Region Selector */}
         <div className="mb-10">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
@@ -214,7 +221,7 @@ export default function Home() {
 
           {/* Fallback button for Prolific users when slots are full */}
           <div className="mt-8 flex flex-col items-center">
-            <p className="text-sm text-gray-500 mb-3">No slots available for your region?</p>
+            <p className="text-lg font-bold text-gray-800 mb-3">No slots available for your region?</p>
             <Link
               href="/completion"
               className="w-full py-3 px-6 rounded-xl border-2 border-dashed border-gray-300 text-gray-600 font-bold text-center hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all"
@@ -257,7 +264,7 @@ export default function Home() {
       <footer className="mt-8 text-gray-400 text-sm">
         © 2024 Cultural Research Study India
       </footer>
-    </div>
+    </div >
   );
 }
 
