@@ -1,6 +1,24 @@
 import { kv } from '@vercel/kv';
 import { NextResponse } from 'next/server';
 
+// Local in-memory fallback for `kv` so you can test locally without Vercel KV.
+// If `VERCEL_KV_CONNECTION_STRING` is not present, the code will use this fallback.
+const useFallback = !process.env.VERCEL_KV_CONNECTION_STRING;
+const localStore = new Map<string, number>();
+const fallbackKv = {
+  async incr(key: string) {
+    const v = (localStore.get(key) || 0) + 1;
+    localStore.set(key, v);
+    return v;
+  },
+  async decr(key: string) {
+    const v = Math.max(0, (localStore.get(key) || 0) - 1);
+    localStore.set(key, v);
+    return v;
+  },
+};
+const kvClient = useFallback ? fallbackKv : kv;
+
 // Map your regions to the actual Google Form URLs here
 const REGION_FORMS: Record<string, string> = {
   north: 'https://docs.google.com/forms/d/e/1FAIpQLSc0KGfFk0IpFbqE_AUbNw_NJpEkYL-YJ4u4b7s99jfmJSUJrA/viewform?usp=header',
@@ -27,12 +45,12 @@ export async function POST(request: Request) {
     // ATOMIC OPERATION:
     // 1. Increment the counter
     // 2. Get the new value immediately
-    const currentCount = await kv.incr(counterKey);
+    const currentCount = await kvClient.incr(counterKey);
 
     // If we just exceeded the limit (e.g., it became 8), revert it and block the user.
     if (currentCount > MAX_LIMIT) {
       // Optional: Decrement it back so the number stays accurate at 7 (not strictly necessary but cleaner)
-      await kv.decr(counterKey);
+      await kvClient.decr(counterKey);
       
       return NextResponse.json({ 
         error: 'Sorry, the quota for this region (7 people) is full.' 
